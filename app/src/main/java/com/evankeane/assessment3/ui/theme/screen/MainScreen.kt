@@ -548,7 +548,7 @@ fun ListItem(
                     color = Color.Gray
                 )
                 Text(
-                    text = mobil.hargaMobil,
+                    text = "Rp. ${mobil.hargaMobil}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     color = Color.Gray

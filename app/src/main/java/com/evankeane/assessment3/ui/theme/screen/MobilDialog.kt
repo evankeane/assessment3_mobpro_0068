@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -100,13 +101,21 @@ fun MobilDialog(
                 value = hargaMobil,
                 onValueChange = { hargaMobil = it },
                 label = { Text(text = stringResource(id = R.string.harga)) },
+                leadingIcon = {
+                    Text(
+                        text = "Rp",
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                },
                 maxLines = 1,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number, // <-- di sini
+                    keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
                 ),
                 modifier = Modifier.padding(top = 8.dp)
             )
+
 
             OutlinedTextField(
                 value = tahun,
