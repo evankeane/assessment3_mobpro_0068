@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
@@ -81,6 +82,7 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.GetCredentialException
+import androidx.datastore.core.IOException
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.ImageLoader
 import coil.compose.AsyncImage
@@ -105,6 +107,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -344,7 +350,7 @@ fun ListItem(
     var showConfirmDelete by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
 
-    var bitmap by remember { mutableStateOf<Bitmap?>(null) } // Gambar mobil untuk diedit
+    var bitmap = rememberBitmapFromUrl(MobilApi.getMobilUrl(mobil.gambar))
 
     if (showSheet) {
         ModalBottomSheet(
@@ -529,7 +535,26 @@ private suspend fun loadBitmapFromUrl(context: Context, url: String): Bitmap? {
     }
 }
 
+@Composable
+fun rememberBitmapFromUrl(url: String): Bitmap? {
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
 
+    LaunchedEffect(url) {
+        withContext(Dispatchers.IO) {
+            try {
+                val connection = URL(url).openConnection() as HttpURLConnection
+                connection.doInput = true
+                connection.connect()
+                val input: InputStream = connection.inputStream
+                bitmap = BitmapFactory.decodeStream(input)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    return bitmap
+}
 
 
 
