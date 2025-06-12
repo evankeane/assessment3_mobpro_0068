@@ -350,6 +350,8 @@ fun ListItem(
     var showConfirmDelete by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
 
+    val viewModel: MainViewModel = viewModel()
+
     var bitmap = rememberBitmapFromUrl(MobilApi.getMobilUrl(mobil.gambar))
 
     if (showSheet) {
@@ -448,7 +450,14 @@ fun ListItem(
             currentHargaMobil = mobil.hargaMobil,
             currentTahunMobil = mobil.tahun,
             onDismissRequest = { showEditDialog = false },
-            onConfirmation = { namaBaru, hargaBaru, tahunBaru ->
+            onConfirmation = { nama, harga,tahun,newBitmap -> viewModel.updateData(
+                userId = userId,
+                namaMobil = nama,
+                hargaMobil = harga,
+                tahun = tahun,
+                bitmap = newBitmap, // Pass the new bitmap from the dialog
+                id = mobil.id
+            )
                 showEditDialog = false
 //                onEdit(mobil, namaBaru, hargaBaru, tahunBaru)
             }
@@ -480,7 +489,7 @@ fun ListItem(
                     modifier = Modifier.fillMaxSize()
                 )
 
-                if (mobil.mine == 1) {
+//                if (mobil.mine == 1) {
                     IconButton(
                         onClick = { showSheet = true },
                         modifier = Modifier
@@ -495,7 +504,7 @@ fun ListItem(
                             tint = Color.White
                         )
                     }
-                }
+//                }
             }
 
             Column(modifier = Modifier.padding(12.dp)) {

@@ -45,7 +45,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.canhub.cropper.CropImageContract
@@ -57,21 +56,22 @@ import com.evankeane.assessment3.R
 
 @Composable
 fun UpdateMobilDialog(
-    bitmap: Bitmap?,
+    bitmap: Bitmap?, // Ini adalah bitmap awal yang diteruskan ke dialog
     currentNamaMobil: String,
     currentHargaMobil: String,
     currentTahunMobil: String,
     onDismissRequest: () -> Unit,
-    onConfirmation: (String, String, String) -> Unit
+    onConfirmation: (nama: String, harga: String, tahun: String, bitmap: Bitmap) -> Unit
 ) {
     var nama_mobil by remember { mutableStateOf(currentNamaMobil) }
     var harga by remember { mutableStateOf(currentHargaMobil) }
     var tahun by remember { mutableStateOf(currentTahunMobil) }
 
+
     val context = LocalContext.current
-    var bitmapToEdit: Bitmap? by remember { mutableStateOf(null) }
+    var bitmapToEdit: Bitmap? by remember { mutableStateOf(null) } // State untuk bitmap yang baru dipilih/dipotong
     val launcher = rememberLauncherForActivityResult(CropImageContract()) {
-        bitmapToEdit = getCroppedImage(context.contentResolver, it)
+        bitmapToEdit = getCroppedImage(context.contentResolver, it) // Perbarui bitmapToEdit setelah crop
     }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
@@ -88,8 +88,9 @@ fun UpdateMobilDialog(
                         .fillMaxWidth()
                         .aspectRatio(1f)
                     ) {
+                        // Tampilkan bitmapToEdit jika sudah ada, jika tidak, tampilkan bitmap awal
                         Image(
-                            bitmap = it.asImageBitmap(),
+                            bitmap = (bitmapToEdit ?: it).asImageBitmap(), // Perubahan di sini
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -98,13 +99,14 @@ fun UpdateMobilDialog(
                         IconButton(
                             onClick = {
                                 val options = CropImageContractOptions(
-                                    null, CropImageOptions(
+                                    null, // Set ke null agar CropImageContract memilih dari galeri/kamera
+                                    CropImageOptions(
                                         imageSourceIncludeGallery = true,
                                         imageSourceIncludeCamera = true,
                                         fixAspectRatio = true
                                     )
                                 )
-                                launcher.launch(options)
+                                launcher.launch(options) // Luncurkan cropper
                             },
                             modifier = Modifier
                                 .align(Alignment.Center)
@@ -170,7 +172,8 @@ fun UpdateMobilDialog(
                     }
                     OutlinedButton(
                         onClick = {
-                            onConfirmation(nama_mobil, harga, tahun)
+                            // Kirimkan bitmapToEdit jika sudah diperbarui, jika tidak, kirimkan bitmap awal
+                            onConfirmation(nama_mobil, harga, tahun, bitmapToEdit ?: bitmap!!)
                         },
                         modifier = Modifier.padding(8.dp)
                     ) {
@@ -198,21 +201,5 @@ private fun getCroppedImage(
     } else {
         val source = ImageDecoder.createSource(resolver, uri)
         ImageDecoder.decodeBitmap(source)
-    }
-}
-
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-fun FilmEditDialogPreview() {
-    Assessment3Theme  {
-        UpdateMobilDialog(
-            bitmap = null,
-            currentNamaMobil = "Civic",
-            currentHargaMobil = "Rp. 1.000.000.000",
-            currentTahunMobil = "2020",
-            onDismissRequest = {},
-            onConfirmation = { _, _, _ -> }
-        )
     }
 }

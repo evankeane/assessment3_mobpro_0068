@@ -6,5 +6,5 @@ data class Mobil(
     val hargaMobil: String,
     val tahun : String,
     val gambar: String,
-    val mine:Int
+//    val mine:Int
 )

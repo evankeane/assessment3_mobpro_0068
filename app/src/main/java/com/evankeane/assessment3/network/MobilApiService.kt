@@ -53,7 +53,7 @@ interface MobilApiService {
     ):OpStatus
 
     @Multipart
-    @POST("/kendaraans/{id}")
+    @POST("kendaraans/{id}")
     suspend fun updateMobil(
         @Header("Authorization") userId: String,
         @Part("namaMobil") nama: RequestBody,
@@ -62,7 +62,6 @@ interface MobilApiService {
         @Part gambar: MultipartBody.Part,
         @Path ("id") id : String
     ): OpStatus
-
 }
 
 object MobilApi {

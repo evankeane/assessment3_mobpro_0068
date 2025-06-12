@@ -62,6 +62,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun updateData(userId: String, namaMobil: String, hargaMobil: String,tahun:String, bitmap: Bitmap, id:String) {
+        Log.d("DEBUG", "User : $userId , namaMobil : $namaMobil, harga : $hargaMobil, Tahun : $tahun , Bitmap : $bitmap , id : $id")
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = MobilApi.service.updateMobil(
@@ -70,7 +71,8 @@ class MainViewModel : ViewModel() {
                     hargaMobil.toRequestBody("text/plain".toMediaTypeOrNull()),
                     tahun.toRequestBody("text/plain".toMediaTypeOrNull()),
                     bitmap.toMultiPartBody(),
-                    id)
+                    id
+                )
                 if (result.status == "success")
                     retrieveData(userId)
                 else
