@@ -5,18 +5,19 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,8 +41,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -60,6 +60,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,7 +69,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
+
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -81,8 +82,10 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
@@ -100,6 +103,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,6 +115,9 @@ fun MainScreen() {
 
     val viewModel: MainViewModel = viewModel()
     val errorMessage by viewModel.errorMessage
+    var itemToEdit by remember { mutableStateOf<Mobil?>(null) }
+    var bitmapToEdit by remember { mutableStateOf<Bitmap?>(null) }
+    var coroutineScope = rememberCoroutineScope()
 
     var showDialog by remember { mutableStateOf(false) }
     var showMobilDialog by remember { mutableStateOf(false) }
@@ -120,6 +127,15 @@ fun MainScreen() {
         bitmap = getCroppedImage(context.contentResolver, it)
         if (bitmap != null) showMobilDialog = true
     }
+
+    LaunchedEffect(itemToEdit) {
+        itemToEdit?.let { mobil ->
+            coroutineScope.launch(Dispatchers.IO) {
+                bitmapToEdit = loadBitmapFromUrl(context, MobilApi.getMobilUrl(mobil.gambar))
+            }
+        }
+    }
+
 
     Scaffold(
         topBar = {
@@ -189,6 +205,7 @@ fun MainScreen() {
             }
         }
 
+
         if (errorMessage != null) {
             Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
             viewModel.clearMessage()
@@ -221,7 +238,7 @@ fun ScreenContent(viewModel: MainViewModel, userId: String ,modifier: Modifier =
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(bottom = 80.dp)
             ) {
-                items(data) { ListItem(mobil = it, userId = userId, onDelete = { id -> viewModel.deleteData(userId, id)},  onEdit = { /* TODO: implement edit */ }) }
+                items(data) { ListItem(mobil = it, userId = userId, onDelete = { id -> viewModel.deleteData(userId, id)}) }
             }
         }
 
@@ -314,97 +331,20 @@ private fun getCroppedImage(
     }
 }
 
-//
-//@Composable
-//fun ListItem(mobil: Mobil, userId: String, onDelete: (String) -> Unit) {
-//    Log.d("DEBUG", "ListItem - mobilId=${mobil.id}, mine?=${mobil.mine}, currentUserId=$userId")
-//
-//    var showDialog by remember { mutableStateOf(false) }
-//
-//
-//    Box(
-//        modifier = Modifier.padding(4.dp).border(1.dp, Color.Gray),
-//        contentAlignment = Alignment.BottomCenter
-//    ) {
-//        AsyncImage(
-//            model = ImageRequest.Builder(LocalContext.current)
-//                .data(
-//                    MobilApi.getMobilUrl(mobil.gambar))
-//                .crossfade(true)
-//                .build(),
-//            contentDescription = stringResource(R.string.gambar, mobil.namaMobil),
-//            contentScale = ContentScale.Crop,
-//            placeholder = painterResource(id = R.drawable.loading_img),
-//            error = painterResource(id = R.drawable.broken_img),
-//            modifier = Modifier.fillMaxWidth().padding(4.dp)
-//        )
-//        Column(
-//            modifier = Modifier.fillMaxWidth().padding(4.dp)
-//                .background(Color(red = 0f, green = 0f, blue = 0f, alpha = 0.5f))
-//                .padding(4.dp)
-//        ) {
-//            Text(text = mobil.namaMobil,
-//                fontWeight = FontWeight.Bold,
-//                color = Color.White
-//            )
-//            Text(text = mobil.hargaMobil,
-//                fontWeight = FontWeight.Bold,
-//                color = Color.White
-//            )
-//            Text(text = mobil.tahun,
-//                fontStyle = FontStyle.Italic,
-//                fontSize = 14.sp,
-//                color = Color.White
-//            )
-//        }
-//
-//        if (mobil.mine == 1) {
-//            IconButton(
-//                onClick = { showDialog = true },
-//                modifier = Modifier.align(Alignment.BottomEnd).padding(8.dp).background(Color(0f,0f,0f,0.5f), shape = CircleShape)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.Delete,
-//                    contentDescription = "Hapus Mobil",
-//                    tint = Color.White
-//                )
-//            }
-//        }
-//    }
-//
-//    if (showDialog) {
-//        AlertDialog(
-//            onDismissRequest = { showDialog = false },
-//            title = { Text(text = "Konfirmasi Hapus") },
-//            text = { Text(text = "Apakah Anda yakin ingin menghapus Mobil ini?") },
-//            confirmButton = {
-//                Button(onClick = {
-//                    showDialog = false
-//                    onDelete(mobil.id)
-//                }) {
-//                    Text(text = "Ya")
-//                }
-//            },
-//            dismissButton = {
-//                Button(onClick = { showDialog = false }) {
-//                    Text(text = "Tidak")
-//                }
-//            }
-//        )
-//    }
-//}
-//
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListItem(
     mobil: Mobil,
     userId: String,
     onDelete: (String) -> Unit,
-    onEdit: (Mobil) -> Unit
+//    onEdit: (Mobil, String, String, String) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     var showSheet by remember { mutableStateOf(false) }
     var showConfirmDelete by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
+
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) } // Gambar mobil untuk diedit
 
     if (showSheet) {
         ModalBottomSheet(
@@ -433,7 +373,7 @@ fun ListItem(
                 Button(
                     onClick = {
                         showSheet = false
-                        onEdit(mobil)
+                        showEditDialog = true
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFF1F5FF),
@@ -493,6 +433,22 @@ fun ListItem(
             }
         )
     }
+
+    // Dialog Edit Mobil
+    if (showEditDialog) {
+        UpdateMobilDialog(
+            bitmap = bitmap, // Gambar bisa diisi kalau kamu ambil dari server
+            currentNamaMobil = mobil.namaMobil,
+            currentHargaMobil = mobil.hargaMobil,
+            currentTahunMobil = mobil.tahun,
+            onDismissRequest = { showEditDialog = false },
+            onConfirmation = { namaBaru, hargaBaru, tahunBaru ->
+                showEditDialog = false
+//                onEdit(mobil, namaBaru, hargaBaru, tahunBaru)
+            }
+        )
+    }
+
 
     // Card Tampilan
     Card(
@@ -557,6 +513,23 @@ fun ListItem(
         }
     }
 }
+
+private suspend fun loadBitmapFromUrl(context: Context, url: String): Bitmap? {
+    val loader = ImageLoader(context)
+    val request = ImageRequest.Builder(context)
+        .data(url)
+        .allowHardware(false)
+        .build()
+    return try {
+        val result = (loader.execute(request) as SuccessResult).drawable
+        (result as BitmapDrawable).bitmap
+    } catch (e: Exception) {
+        Log.e("LoadBitmap", "Failed to load bitmap from URL: $url", e)
+        null
+    }
+}
+
+
 
 
 

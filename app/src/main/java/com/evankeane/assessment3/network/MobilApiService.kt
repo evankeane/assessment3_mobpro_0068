@@ -16,7 +16,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
-import retrofit2.http.Query
+//import retrofit2.http.Query
 
 private const val BASE_URL = "https://grouper-superb-polecat.ngrok-free.app/api/"
 
@@ -51,6 +51,18 @@ interface MobilApiService {
         @Header("Authorization") userId: String,
         @Path("id") id: String
     ):OpStatus
+
+    @Multipart
+    @POST("/kendaraans/{id}")
+    suspend fun updateMobil(
+        @Header("Authorization") userId: String,
+        @Part("namaMobil") nama: RequestBody,
+        @Part("hargaMobil") harga: RequestBody,
+        @Part("tahun") tahun: RequestBody,
+        @Part gambar: MultipartBody.Part,
+        @Path ("id") id : String
+    ): OpStatus
+
 }
 
 object MobilApi {

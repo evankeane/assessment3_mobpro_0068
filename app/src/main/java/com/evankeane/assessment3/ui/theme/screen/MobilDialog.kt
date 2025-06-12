@@ -74,28 +74,6 @@ fun MobilDialog(
 
 
 
-//            OutlinedTextField(
-//                value = hargaMobil,
-//                onValueChange = { hargaMobil = it },
-//                label = { Text(text = stringResource(id = R.string.harga)) },
-//                maxLines = 1,
-//                keyboardOptions = KeyboardOptions(
-//                    capitalization = KeyboardCapitalization.Sentences,
-//                    imeAction = ImeAction.Done
-//                ),
-//                modifier = Modifier.padding(top = 8.dp)
-//            )
-//            OutlinedTextField(
-//                value = tahun,
-//                onValueChange = { tahun = it },
-//                label = { Text(text = stringResource(id = R.string.tahun)) },
-//                maxLines = 1,
-//                keyboardOptions = KeyboardOptions(
-//                    capitalization = KeyboardCapitalization.Sentences,
-//                    imeAction = ImeAction.Done
-//                ),
-//                modifier = Modifier.padding(top = 8.dp)
-//            )
 
             OutlinedTextField(
                 value = hargaMobil,

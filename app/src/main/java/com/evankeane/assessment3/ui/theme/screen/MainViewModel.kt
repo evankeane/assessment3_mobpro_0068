@@ -61,6 +61,28 @@ class MainViewModel : ViewModel() {
 
     }
 
+    fun updateData(userId: String, namaMobil: String, hargaMobil: String,tahun:String, bitmap: Bitmap, id:String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result = MobilApi.service.updateMobil(
+                    userId,
+                    namaMobil.toRequestBody("text/plain".toMediaTypeOrNull()),
+                    hargaMobil.toRequestBody("text/plain".toMediaTypeOrNull()),
+                    tahun.toRequestBody("text/plain".toMediaTypeOrNull()),
+                    bitmap.toMultiPartBody(),
+                    id)
+                if (result.status == "success")
+                    retrieveData(userId)
+                else
+                    throw Exception(result.message)
+            } catch (e: Exception) {
+                Log.d("MainViewModel", "Failure: ${e.message}")
+                errorMessage.value = "Error: ${e.message}"
+            }
+        }
+
+    }
+
     fun deleteData(userId: String, mobilId: String) {
         Log.d("DEBUG", "delete Data: UserId= $userId, mobilId= $mobilId")
         viewModelScope.launch(Dispatchers.IO) {
