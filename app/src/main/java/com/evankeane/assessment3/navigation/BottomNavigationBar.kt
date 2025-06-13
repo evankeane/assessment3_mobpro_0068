@@ -1,4 +1,4 @@
-package com.evankeane.assessment3.ui.theme.screen
+package com.evankeane.assessment3.navigation
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.evankeane.assessment3.navigation.Screen
 
 @Composable
 fun BottomNavigationBar(
