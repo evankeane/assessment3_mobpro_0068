@@ -1,18 +1,17 @@
 package com.evankeane.assessment3.ui.theme.screen
 
-import android.content.ContentResolver
+//import android.content.ContentResolver
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
+//import android.graphics.ImageDecoder
 import android.graphics.drawable.BitmapDrawable
-import android.os.Build
-import android.provider.MediaStore
+//import android.os.Build
+//import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.foundation.background
+//import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,18 +21,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -41,7 +36,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -81,16 +75,12 @@ import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.datastore.core.IOException
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import com.canhub.cropper.CropImageContract
-import com.canhub.cropper.CropImageContractOptions
-import com.canhub.cropper.CropImageOptions
-import com.canhub.cropper.CropImageView
+//import com.canhub.cropper.CropImageContract
+//import com.canhub.cropper.CropImageView
 import com.evankeane.assessment3.BuildConfig
 import com.evankeane.assessment3.R
 import com.evankeane.assessment3.model.Mobil
@@ -119,18 +109,18 @@ fun HomeScreen() {
 
     val viewModel: MainViewModel = viewModel()
     val errorMessage by viewModel.errorMessage
-    var itemToEdit by remember { mutableStateOf<Mobil?>(null) }
+    val itemToEdit by remember { mutableStateOf<Mobil?>(null) }
     var bitmapToEdit by remember { mutableStateOf<Bitmap?>(null) }
-    var coroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     var showDialog by remember { mutableStateOf(false) }
     var showMobilDialog by remember { mutableStateOf(false) }
 
-    var bitmap: Bitmap? by remember { mutableStateOf(null) }
-    val launcher = rememberLauncherForActivityResult(CropImageContract()) {
-        bitmap = getCroppedImage(context.contentResolver, it)
-        if (bitmap != null) showMobilDialog = true
-    }
+    val bitmap: Bitmap? by remember { mutableStateOf(null) }
+//    val launcher = rememberLauncherForActivityResult(CropImageContract()) {
+//        bitmap = getCroppedImage(context.contentResolver, it)
+//        if (bitmap != null) showMobilDialog = true
+//    }
 
     LaunchedEffect(itemToEdit) {
         itemToEdit?.let { mobil ->
@@ -299,25 +289,25 @@ private suspend fun signOut(context: Context, dataStore: UserDataStore) {
         Log.e("SIGN-IN", "Error: ${e.errorMessage}")
     }
 }
-
-private fun getCroppedImage(
-    resolver: ContentResolver,
-    result: CropImageView.CropResult
-) : Bitmap? {
-    if (!result.isSuccessful) {
-        Log.e("IMAGE", "Error: ${result.error}")
-        return null
-    }
-
-    val uri = result.uriContent ?: return null
-
-    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-        MediaStore.Images.Media.getBitmap(resolver, uri)
-    } else {
-        val source = ImageDecoder.createSource(resolver, uri)
-        ImageDecoder.decodeBitmap(source)
-    }
-}
+//
+//private fun getCroppedImage(
+//    resolver: ContentResolver,
+//    result: CropImageView.CropResult
+//) : Bitmap? {
+//    if (!result.isSuccessful) {
+//        Log.e("IMAGE", "Error: ${result.error}")
+//        return null
+//    }
+//
+//    val uri = result.uriContent ?: return null
+//
+//    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+//        MediaStore.Images.Media.getBitmap(resolver, uri)
+//    } else {
+//        val source = ImageDecoder.createSource(resolver, uri)
+//        ImageDecoder.decodeBitmap(source)
+//    }
+//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -334,7 +324,7 @@ fun ListItemHome(
 
     val viewModel: MainViewModel = viewModel()
 
-    var bitmap = rememberBitmapFromUrl(MobilApi.getMobilUrl(mobil.gambar))
+    val bitmap = rememberBitmapFromUrl(MobilApi.getMobilUrl(mobil.gambar))
 
     if (showSheet) {
         ModalBottomSheet(

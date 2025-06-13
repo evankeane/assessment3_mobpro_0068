@@ -82,8 +82,6 @@ import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.datastore.core.IOException
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -120,9 +118,9 @@ fun MainScreen() {
 
     val viewModel: MainViewModel = viewModel()
     val errorMessage by viewModel.errorMessage
-    var itemToEdit by remember { mutableStateOf<Mobil?>(null) }
+    val itemToEdit by remember { mutableStateOf<Mobil?>(null) }
     var bitmapToEdit by remember { mutableStateOf<Bitmap?>(null) }
-    var coroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     var showDialog by remember { mutableStateOf(false) }
     var showMobilDialog by remember { mutableStateOf(false) }
@@ -373,7 +371,7 @@ fun ListItem(
 
     val viewModel: MainViewModel = viewModel()
 
-    var bitmap = rememberBitmapFromUrl(MobilApi.getMobilUrl(mobil.gambar))
+    val bitmap = rememberBitmapFromUrl(MobilApi.getMobilUrl(mobil.gambar))
 
     if (showSheet) {
         ModalBottomSheet(

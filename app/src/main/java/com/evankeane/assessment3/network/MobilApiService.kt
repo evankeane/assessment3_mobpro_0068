@@ -18,7 +18,7 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 //import retrofit2.http.Query
 
-private const val BASE_URL = "https://grouper-superb-polecat.ngrok-free.app/api/"
+private const val BASE_URL = "https://apimobpromobil-production.up.railway.app/api/"
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
@@ -70,7 +70,7 @@ object MobilApi {
     }
 
     fun getMobilUrl(imageId: String): String {
-        return "https://grouper-superb-polecat.ngrok-free.app/storage/$imageId"
+        return "https://apimobpromobil-production.up.railway.app/storage/$imageId"
     }
 }
 enum class ApiStatus { LOADING, SUCCESS, FAILED }

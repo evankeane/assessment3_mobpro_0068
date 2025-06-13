@@ -1,8 +1,7 @@
 package com.evankeane.assessment3.ui.theme.screen
 
-import com.evankeane.assessment3.ui.theme.Assessment3Theme
+
 import android.content.ContentResolver
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.os.Build
@@ -64,7 +63,7 @@ fun UpdateMobilDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: (nama: String, harga: String, tahun: String, bitmap: Bitmap) -> Unit
 ) {
-    var nama_mobil by remember { mutableStateOf(currentNamaMobil) }
+    var namaMobil by remember { mutableStateOf(currentNamaMobil) }
     var harga by remember { mutableStateOf(currentHargaMobil) }
     var tahun by remember { mutableStateOf(currentTahunMobil) }
 
@@ -127,8 +126,8 @@ fun UpdateMobilDialog(
                 }
 
                 OutlinedTextField(
-                    value = nama_mobil,
-                    onValueChange = { nama_mobil = it },
+                    value = namaMobil,
+                    onValueChange = { namaMobil = it },
                     label = { Text(text = stringResource(id = R.string.nama)) },
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(
@@ -176,7 +175,7 @@ fun UpdateMobilDialog(
                     OutlinedButton(
                         onClick = {
                             // Kirimkan bitmapToEdit jika sudah diperbarui, jika tidak, kirimkan bitmap awal
-                            onConfirmation(nama_mobil, harga, tahun, bitmapToEdit ?: bitmap!!)
+                            onConfirmation(namaMobil, harga, tahun, bitmapToEdit ?: bitmap!!)
                         },
                         modifier = Modifier.padding(8.dp)
                     ) {
