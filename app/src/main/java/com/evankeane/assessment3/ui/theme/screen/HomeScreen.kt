@@ -171,28 +171,10 @@ fun HomeScreen() {
                     }
                 }
             )
-        },
-        floatingActionButton = {
-            if (user.email.isNotEmpty()) {
-                FloatingActionButton(onClick = {
-                    val options = CropImageContractOptions(
-                        null, CropImageOptions(
-                            imageSourceIncludeGallery = false,
-                            imageSourceIncludeCamera = true,
-                            fixAspectRatio = true
-                        )
-                    )
-                    launcher.launch(options)
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(id = R.string.tambah_mobil)
-                    )
-                }
-            }
         }
+
     ) { innerPadding ->
-        ScreenContent(viewModel,user.email, Modifier.padding(innerPadding))
+        ScreenContentHome(viewModel,user.email, Modifier.padding(innerPadding))
 
         if (showDialog) {
             ProfilDialog(
@@ -225,7 +207,7 @@ fun ScreenContentHome(viewModel: MainViewModel, userId: String ,modifier: Modifi
     val status by viewModel.status.collectAsState()
 
     LaunchedEffect(userId) {
-        viewModel.retrieveData(userId)
+        viewModel.retrieveData()
     }
 
     when (status) {
@@ -244,7 +226,7 @@ fun ScreenContentHome(viewModel: MainViewModel, userId: String ,modifier: Modifi
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(bottom = 80.dp)
             ) {
-                items(data) { ListItem(mobil = it, userId = userId, onDelete = { id -> viewModel.deleteData(userId, id)}) }
+                items(data) { ListItemHome(mobil = it, userId = userId, onDelete = { id -> viewModel.deleteData(userId, id)}) }
             }
         }
 
@@ -489,22 +471,7 @@ fun ListItemHome(
                     modifier = Modifier.fillMaxSize()
                 )
 
-                if (userId.isNotEmpty()) {
-                    IconButton(
-                        onClick = { showSheet = true },
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(8.dp)
-                            .background(Color(0f, 0f, 0f, 0.4f), shape = CircleShape)
-                            .size(36.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = "Menu",
-                            tint = Color.White
-                        )
-                    }
-                }
+           
             }
 
             Column(modifier = Modifier.padding(12.dp)) {

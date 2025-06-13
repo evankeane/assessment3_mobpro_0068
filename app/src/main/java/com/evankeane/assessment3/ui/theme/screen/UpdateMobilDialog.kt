@@ -52,6 +52,7 @@ import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.canhub.cropper.CropImageView
 import com.evankeane.assessment3.R
+import androidx.compose.ui.text.input.KeyboardType
 
 
 @Composable
@@ -142,22 +143,24 @@ fun UpdateMobilDialog(
                     label = { Text(text = stringResource(id = R.string.harga)) },
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.None,
+                        keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Next
                     ),
                     modifier = Modifier.padding(top = 8.dp)
                 )
+
                 OutlinedTextField(
                     value = tahun,
                     onValueChange = { tahun = it },
                     label = { Text(text = stringResource(id = R.string.tahun)) },
-                    maxLines = 3,
+                    maxLines = 1,
                     keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Sentences,
+                        keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
                     ),
                     modifier = Modifier.padding(top = 8.dp)
                 )
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

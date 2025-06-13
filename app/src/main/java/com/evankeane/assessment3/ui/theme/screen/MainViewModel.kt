@@ -26,11 +26,38 @@ class MainViewModel : ViewModel() {
     var errorMessage = mutableStateOf<String?>(null)
         private set
 
-    fun retrieveData(userId: String) {
+//    fun retrieveData(userId: String) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            status.value = ApiStatus.LOADING
+//            try {
+//                data.value = MobilApi.service.getMobil(userId)
+//                status.value = ApiStatus.SUCCESS
+//            } catch (e: Exception) {
+//                Log.d("MainViewModel", "Failure: ${e.message}")
+//                status.value = ApiStatus.FAILED
+//            }
+//        }
+//    }
+//    fun retrieveAllData(userId: String) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            status.value = ApiStatus.LOADING
+//            try {
+//                val result = MobilApi.service.getMobil(userId)
+//                data.value = result
+//                status.value = ApiStatus.SUCCESS
+//            } catch (e: Exception) {
+//                Log.d("MainViewModel", "Failure: ${e.message}")
+//                status.value = ApiStatus.FAILED
+//            }
+//        }
+//    }
+
+    fun retrieveData(userId: String = "all") {
         viewModelScope.launch(Dispatchers.IO) {
             status.value = ApiStatus.LOADING
             try {
-                data.value = MobilApi.service.getMobil(userId)
+                val result = MobilApi.service.getMobil(userId)
+                data.value = result
                 status.value = ApiStatus.SUCCESS
             } catch (e: Exception) {
                 Log.d("MainViewModel", "Failure: ${e.message}")
@@ -38,6 +65,7 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
 
     fun saveData(userId: String, namaMobil: String, hargaMobil: String,tahun:String, bitmap: Bitmap) {
         viewModelScope.launch(Dispatchers.IO) {
