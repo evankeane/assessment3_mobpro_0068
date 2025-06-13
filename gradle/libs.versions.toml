@@ -15,6 +15,7 @@ credentials = "1.5.0"
 googleid = "1.1.1"
 datastorePreference = "1.1.4"
 androidImageCropper = "4.5.0"
+navCompose ="2.8.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +42,7 @@ androidx-credentials-play-services-auth = {group = "androidx.credentials", name 
 googleid = {group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid"}
 androidx-datastore-preference = {module= "androidx.datastore:datastore-preferences", version.ref = "datastorePreference"}
 androidx-image-cropper = {module = "com.vanniktech:android-image-cropper", version.ref = "androidImageCropper"}
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navCompose"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

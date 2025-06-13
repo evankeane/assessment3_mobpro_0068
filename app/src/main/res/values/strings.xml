@@ -12,5 +12,7 @@
     <string name="tahun">Tahun</string>
     <string name="batal">Batal</string>
     <string name="simpan">Simpan</string>
+    <string name="home">Home</string>
+    <string name="main">Profile</string>
 
 </resources>

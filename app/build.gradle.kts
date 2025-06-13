@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.androidx.datastore.preference)
     implementation(libs.androidx.image.cropper)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

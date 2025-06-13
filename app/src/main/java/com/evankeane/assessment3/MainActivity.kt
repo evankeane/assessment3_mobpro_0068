@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.evankeane.assessment3.ui.theme.Assessment3Theme
+import com.evankeane.assessment3.ui.theme.screen.AppNavigation
 import com.evankeane.assessment3.ui.theme.screen.MainScreen
 
 
@@ -21,7 +22,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Assessment3Theme  {
-                MainScreen()
+                AppNavigation()
             }
         }
     }

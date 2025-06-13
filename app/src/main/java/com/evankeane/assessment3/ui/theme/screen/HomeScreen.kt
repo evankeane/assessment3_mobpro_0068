@@ -112,7 +112,7 @@ import java.net.URL
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun HomeScreen() {
     val context = LocalContext.current
     val dataStore = UserDataStore(context)
     val user by dataStore.userFlow.collectAsState(User())
@@ -220,7 +220,7 @@ fun MainScreen() {
 }
 
 @Composable
-fun ScreenContent(viewModel: MainViewModel, userId: String ,modifier: Modifier = Modifier) {
+fun ScreenContentHome(viewModel: MainViewModel, userId: String ,modifier: Modifier = Modifier) {
     val data by viewModel.data
     val status by viewModel.status.collectAsState()
 
@@ -339,7 +339,7 @@ private fun getCroppedImage(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListItem(
+fun ListItemHome(
     mobil: Mobil,
     userId: String,
     onDelete: (String) -> Unit,
@@ -507,7 +507,7 @@ fun ListItem(
                 }
             }
 
-                Column(modifier = Modifier.padding(12.dp)) {
+            Column(modifier = Modifier.padding(12.dp)) {
                 Text(
                     text = mobil.namaMobil,
                     fontWeight = FontWeight.Bold,
@@ -545,7 +545,7 @@ private suspend fun loadBitmapFromUrl(context: Context, url: String): Bitmap? {
 }
 
 @Composable
-fun rememberBitmapFromUrl(url: String): Bitmap? {
+fun rememberBitmapFromUrlHome(url: String): Bitmap? {
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
 
     LaunchedEffect(url) {
@@ -570,9 +570,9 @@ fun rememberBitmapFromUrl(url: String): Bitmap? {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun MainScreenPreview() {
+fun HomeScreenPreview() {
     Assessment3Theme  {
-        MainScreen()
+        HomeScreen()
     }
 }
 
